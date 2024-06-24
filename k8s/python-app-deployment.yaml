@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: python-app
-        image: your-dockerhub-username/python-app:latest
+        image: malinivijayan/python-app:latest 
         env:
         - name: DB_PASSWORD
           valueFrom:

@@ -7,7 +7,6 @@ from DB_connection import connect_to_database
 import configparser
 import mysql.connector
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 config = configparser.ConfigParser()
@@ -37,16 +36,16 @@ def fetch_and_write_data():
         cursor = connection.cursor()
         
         # Check if data exists
-        cursor.execute("SELECT COUNT(*) FROM poc.flipkart_dataset;")
+        cursor.execute("SELECT COUNT(*) FROM flipkart;")
         count = cursor.fetchone()[0]
-        logging.info(f"Total records in 'flipkart_dataset': {count}")
+        logging.info(f"Total records in 'flipkart': {count}")
 
         if count == 0:
-            logging.warning("The table 'flipkart_dataset' is empty!")
+            logging.warning("The table 'flipkart' is empty!")
             return
 
         # Fetch column names
-        cursor.execute("SELECT * FROM flipkart_dataset LIMIT 1;")
+        cursor.execute("SELECT * FROM flipkart LIMIT 1;")
         column_names = [i[0] for i in cursor.description]
         batch_size = determine_batch_size(column_names)
         offset = 0
@@ -61,7 +60,7 @@ def fetch_and_write_data():
             writer.writerow(column_names + ['Hashed_Product_Name'])
 
             while True:
-                cursor.execute(f"SELECT * FROM flipkart_dataset LIMIT {batch_size} OFFSET {offset};")
+                cursor.execute(f"SELECT * FROM flipkart LIMIT {batch_size} OFFSET {offset};")
                 users = cursor.fetchall()
                 if not users:
                     break
